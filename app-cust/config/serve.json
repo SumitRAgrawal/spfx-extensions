@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://spfxapp.sharepoint.com/sites/dev",
       "customActions": {
         "83069644-99c9-4add-ace6-ba4bd8e68398": {
           "location": "ClientSideExtension.ApplicationCustomizer",
