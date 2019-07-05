@@ -4,6 +4,8 @@ import {
   BaseApplicationCustomizer, PlaceholderName
 } from '@microsoft/sp-application-base';
 import { Dialog } from '@microsoft/sp-dialog';
+import { AppInsights } from 'applicationinsights-js'
+
 
 import * as strings from 'CustomHfApplicationCustomizerStrings';
 
@@ -17,6 +19,7 @@ const LOG_SOURCE: string = 'CustomHfApplicationCustomizer';
 export interface ICustomHfApplicationCustomizerProperties {
   // This is an example; replace with your own property
   testMessage: string;
+  key: string;
 }
 
 /** A Custom Action which can be run during execution of a Client Side Application */
@@ -31,6 +34,17 @@ export default class CustomHfApplicationCustomizer
     if (!message) {
       message = '(No properties were provided.)';
     }
+
+    AppInsights.downloadAndSetup({ instrumentationKey: this.properties.key })
+    AppInsights.startTrackPage();
+
+    AppInsights.trackEvent('app-cust', <any>{
+      'site_id': this.context.pageContext.site.id,
+      'web_title': this.context.pageContext.web.title
+
+    });
+
+    AppInsights.setAuthenticatedUserContext(this.context.pageContext.user.email)
     Dialog.alert(`Hello from ${strings.Title}:\n\n${message}`);
 
     return Promise.resolve();

@@ -9,7 +9,8 @@
         "83069644-99c9-4add-ace6-ba4bd8e68398": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "testMessage": "Test message"
+            "testMessage": "Test message",
+            "key": ""
           }
         }
       }
