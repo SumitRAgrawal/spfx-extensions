@@ -1,7 +1,7 @@
 import { override } from '@microsoft/decorators';
 import { Log } from '@microsoft/sp-core-library';
 import {
-  BaseApplicationCustomizer, PlaceholderName
+  BaseApplicationCustomizer, PlaceholderName, PlaceholderContent
 } from '@microsoft/sp-application-base';
 import { Dialog } from '@microsoft/sp-dialog';
 import { AppInsights } from 'applicationinsights-js'
@@ -26,6 +26,9 @@ export interface ICustomHfApplicationCustomizerProperties {
 export default class CustomHfApplicationCustomizer
   extends BaseApplicationCustomizer<ICustomHfApplicationCustomizerProperties> {
 
+  private _topPlaceholder: PlaceholderContent | undefined;
+  private _bottomPlaceholder: PlaceholderContent | undefined;
+
   @override
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, `Initialized ${strings.Title}`);
@@ -45,8 +48,18 @@ export default class CustomHfApplicationCustomizer
     });
 
     AppInsights.setAuthenticatedUserContext(this.context.pageContext.user.email)
-    Dialog.alert(`Hello from ${strings.Title}:\n\n${message}`);
+
+    this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceholder)
+    // Dialog.alert(`Hello from ${strings.Title}:\n\n${message}`);
 
     return Promise.resolve();
+  }
+
+  private _renderPlaceholder(): void {
+    this._topPlaceholder = this.context.placeholderProvider.tryCreateContent(PlaceholderName.Top)
+    this._topPlaceholder.domElement.innerHTML = `Hello Header`
+
+    this._bottomPlaceholder = this.context.placeholderProvider.tryCreateContent(PlaceholderName.Bottom);
+    this._bottomPlaceholder.domElement.innerHTML = 'Hello Footer'
   }
 }
